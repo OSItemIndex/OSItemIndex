@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+
+  # Using bitnami-container images which alludes to being up-to-date, bare-minimum, and non-root which comes with an additional security layer
+  # consul:
+    # image: bitnami/consul:latest
+    # ports: # https://www.consul.io/docs/install/ports
+      # - '8500:8500' # The HTTP API
+      # - '8600:8600' # DNS server (TCP)
+      # - '8600:8600/udp' # DNS server (UDP)
+    # labels:
+      # SERVICE_IGNORE: true # registrator should ignore the container, consul will register it-self
+
+  # registrator:
+    # image: gliderlabs/registrator
+   # entrypoint: bin/registrator consul://consul:8500 # http://gliderlabs.github.io/registrator/latest/user/run/
+    # volumes:
+      # - /var/run/docker.sock:/tmp/docker.sock # Used for access to the docker api
+    # depends_on:
+      # - consul
+
+  redis:
+    image: bitnami/redis:latest
+    # volumes:
+       # - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    labels: # Service labels for registrator https://gliderlabs.github.io/registrator/latest/user/services/, http://gliderlabs.github.io/registrator/latest/user/backends/
+      SERVICE_NAME: redis
+      SERVICE_TAGS: database, redis
+    depends_on:
+      - consul
+      - registrator
+
+  ositemindex.aggregator.osrsbox:
+    build:
+      context: ./OSItemIndex.Aggregator.OSRSBox
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
