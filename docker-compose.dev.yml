@@ -64,7 +64,8 @@ services:
 
   api:
     container_name: api
-    image: https://ghcr.io/ositemindex/ositemindex.api/ositemindex.api:latest
+    build:
+      context: ./OSItemIndex.API
     env_file: .env
     environment:
       DbOptions__DbHost: postgres
@@ -89,7 +90,8 @@ services:
 
   aggregator:
       container_name: aggregator
-      image: https://ghcr.io/ositemindex/ositemindex.aggregator/ositemindex.aggregator:latest
+      build:
+        context: ./OSItemIndex.Aggregator
       env_file: .env
       environment:
         DbOptions__DbHost: postgres
