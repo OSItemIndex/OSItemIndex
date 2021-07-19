@@ -31,7 +31,8 @@ services:
       - traefik.enable=true
       - traefik.http.routers.postgres.rule=Host(`postgres.localhost`)
     volumes:
-      - ./create-publication.sql:/docker-entrypoint-initdb.d/create-publication.sql
+      - './postgres-data:/var/lib/docker/volumes/ositemindex-data'
+      - './create-publication.sql:/docker-entrypoint-initdb.d/create-publication.sql'
 
   realtime:
     image: supabase/realtime:latest
