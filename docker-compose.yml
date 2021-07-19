@@ -37,6 +37,7 @@ services:
       - traefik.http.routers.postgres.rule=Host(`postgres.${WEB_DOMAIN}`)
     volumes:
       - ./create-publication.sql:/docker-entrypoint-initdb.d/create-publication.sql
+      - ./postgres-data:/var/lib/docker/volumes/ositemindex-data
 
   realtime:
     image: supabase/realtime:latest
