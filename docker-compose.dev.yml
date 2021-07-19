@@ -63,11 +63,6 @@ services:
       DbOptions__DbPass: ${POSTGRES_PASSWORD}
       DbOptions__DbPort: ${POSTGRES_PORT}
       DbOptions__DbDatabase: ${POSTGRES_DB}
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:5000/swagger" ] # Utilize a basic health check to determine if swagger is running, if so the service should be ready
-      interval: 10s
-      timeout: 10s
-      retries: 5
     ports:
       - '23401:5000'
     deploy:
