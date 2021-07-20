@@ -3,7 +3,7 @@ services:
 
   traefik:
     image: traefik
-    container_name: traefik
+    container_name: osi-traefik
     command:
       - --api=true
       - --api.insecure=true # Dashboard
@@ -18,7 +18,7 @@ services:
 
   postgres:
     image: supabase/postgres:latest
-    container_name: postgres
+    container_name: osi-postgres
     env_file: .env
     healthcheck:
         test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ] # runs a shell command to check if the postgres server is ready - https://www.postgresql.org/docs/current/app-pg-isready.html
@@ -30,13 +30,14 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.postgres.rule=Host(`postgres.localhost`)
+    tmpfs:
+      - '/var/lib/postgresql/data'
     volumes:
-      - './postgres-data:/var/lib/docker/volumes/ositemindex-data'
       - './create-publication.sql:/docker-entrypoint-initdb.d/create-publication.sql'
 
   realtime:
     image: supabase/realtime:latest
-    container_name: postgres-realtime
+    container_name: osi-postgres-realtime
     environment:
       DB_HOST: postgres
       DB_NAME: ${POSTGRES_DB}
@@ -54,7 +55,7 @@ services:
       - traefik.enable=true
 
   api:
-    container_name: api
+    container_name: osi-api
     build:
       context: ./OSItemIndex.API
     env_file: .env
@@ -71,6 +72,8 @@ services:
         limits:
           memory: 512M
     depends_on:
+      aggregator:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     labels:
@@ -78,7 +81,7 @@ services:
       - traefik.http.routers.api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/swagger`))
 
   aggregator:
-      container_name: aggregator
+      container_name: osi-aggregator
       build:
         context: ./OSItemIndex.Aggregator
       env_file: .env
@@ -88,6 +91,11 @@ services:
         DbOptions__DbPass: ${POSTGRES_PASSWORD}
         DbOptions__DbPort: ${POSTGRES_PORT}
         DbOptions__DbDatabase: ${POSTGRES_DB}
+      healthcheck:
+        test: [ "CMD-SHELL", "wget -nv -S -O - http://localhost:5000/api/services/osrsbox | grep -q '\"version\":null' && exit 1 || exit 0" ]
+        interval: 10s
+        timeout: 10s
+        retries: 5
       ports:
         - '23402:5000'
       deploy:
@@ -95,7 +103,5 @@ services:
           limits:
             memory: 512M
       depends_on:
-        api:
-          condition: service_started
         postgres:
           condition: service_healthy
