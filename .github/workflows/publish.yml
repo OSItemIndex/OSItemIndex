@@ -8,17 +8,27 @@ on:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest # The type of runner that the job will run on
     strategy:
       matrix:
-        repo: ['ositemindex.api', 'ositemindex.aggregator']
-        repoUpper: ['OSItemIndex.API', 'OSItemIndex.Aggregator']
-    runs-on: ubuntu-latest # The type of runner that the job will run on
+        include:
+        - repo: ositemindex.api
+          repoUpper: OSItemIndex.API
+        - repo: ositemindex.aggregator
+          repoUpper: OSItemIndex.Aggregator
     steps:
-
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
-      - name: Checkout
+      - name: Set version
+        uses: dotnet/nbgv@v0.4
+        id: nbgv
+        with:
+          setAllVars: false
+          
+      - name: Checkout ${{ matrix.repo }}
         uses: actions/checkout@v2
         with:
           repository: ositemindex/${{ matrix.repo }}
@@ -34,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true # Will only build if this is not here
-          context: ./OSItemIndex/OSItemIndex/${{ matrix.repoUpper }}
-          tags: |
-            ghcr.io/ositemindex/${{ matrix.repo }}:${{ github.ref }}
+          context: .
+          tags: | 
             ghcr.io/ositemindex/${{ matrix.repo }}:latest
+            ghcr.io/ositemindex/${{ matrix.repo }}:${{ steps.nbgv.outputs.SimpleVersion }}
