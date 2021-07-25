@@ -1,4 +1,4 @@
-name: Publish docker packages
+name: Publish docker package [aggregator]
 
 # Controls when the workflow will run
 on:
