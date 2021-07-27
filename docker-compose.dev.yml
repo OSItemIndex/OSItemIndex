@@ -60,6 +60,7 @@ services:
       context: ./OSItemIndex.API
     env_file: .env
     environment:
+      ASPNETCORE_ENVIRONMENT: development
       DbOptions__DbHost: postgres
       DbOptions__DbUser: ${POSTGRES_USER}
       DbOptions__DbPass: ${POSTGRES_PASSWORD}
@@ -85,6 +86,7 @@ services:
         context: ./OSItemIndex.Aggregator
       env_file: .env
       environment:
+        ASPNETCORE_ENVIRONMENT: development
         DbOptions__DbHost: postgres
         DbOptions__DbUser: ${POSTGRES_USER}
         DbOptions__DbPass: ${POSTGRES_PASSWORD}
