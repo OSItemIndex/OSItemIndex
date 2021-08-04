@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   traefik:
     image: traefik
@@ -10,29 +10,29 @@ services:
       - --providers.docker.exposedbydefault=false # exposes services by default if true
       - --entryPoints.web.address=:80
     ports:
-      - "80:80" # HTTP port
-      - "8080:8080" # Traefik
+      - '80:80' # HTTP port
+      - '8080:8080' # Traefik
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro" # docker api socket
+      - '/var/run/docker.sock:/var/run/docker.sock:ro' # docker api socket
 
   postgres:
     image: supabase/postgres:latest
     container_name: osi-postgres
-    env_file: .env.dev
+    env_file: .env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"] # runs a shell command to check if the postgres server is ready - https://www.postgresql.org/docs/current/app-pg-isready.html
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}'] # runs a shell command to check if the postgres server is ready - https://www.postgresql.org/docs/current/app-pg-isready.html
       interval: 10s
       timeout: 10s
       retries: 5
     ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     labels:
       - traefik.enable=true
       - traefik.http.routers.postgres.rule=Host(`postgres.localhost`)
     tmpfs:
-      - "/var/lib/postgresql/data"
+      - '/var/lib/postgresql/data'
     volumes:
-      - "./create-publication.sql:/docker-entrypoint-initdb.d/create-publication.sql"
+      - './create-publication.sql:/docker-entrypoint-initdb.d/create-publication.sql'
 
   realtime:
     image: supabase/realtime:latest
@@ -44,9 +44,9 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: ${POSTGRES_PORT}
       PORT: 5000
-      SECURE_CHANNELS: "false"
+      SECURE_CHANNELS: 'false'
     ports:
-      - "23400:5000"
+      - '23400:5000'
     depends_on:
       postgres:
         condition: service_healthy
@@ -58,7 +58,7 @@ services:
     build:
       context: ./OSItemIndex.API
       dockerfile: Dockerfile.dev
-    env_file: .env.dev
+    env_file: .env
     environment:
       ASPNETCORE_ENVIRONMENT: development
       DbOptions__DbHost: postgres
@@ -67,9 +67,9 @@ services:
       DbOptions__DbPort: ${POSTGRES_PORT}
       DbOptions__DbDatabase: ${POSTGRES_DB}
     ports:
-      - "23401:5000"
+      - '23401:5000'
     volumes:
-      - "./OSItemIndex.API/src/:/app"
+      - './OSItemIndex.API/src/:/app'
     deploy:
       resources:
         limits:
@@ -87,7 +87,7 @@ services:
     build:
       context: ./OSItemIndex.Aggregator
       dockerfile: Dockerfile.dev
-    env_file: .env.dev
+    env_file: .env
     environment:
       ASPNETCORE_ENVIRONMENT: development
       DbOptions__DbHost: postgres
@@ -96,9 +96,9 @@ services:
       DbOptions__DbPort: ${POSTGRES_PORT}
       DbOptions__DbDatabase: ${POSTGRES_DB}
     ports:
-      - "23402:5000"
+      - '23402:5000'
     volumes:
-      - "./OSItemIndex.Aggregator/src/:/app"
+      - './OSItemIndex.Aggregator/src/:/app'
     deploy:
       resources:
         limits:
