@@ -79,8 +79,8 @@ services:
         condition: service_healthy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.api.priority=1
-      - traefik.http.routers.api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/swagger`))
+      - traefik.http.routers.api.priority=90
+      - traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/swagger`)
 
   aggregator:
     container_name: osi-aggregator
@@ -112,5 +112,24 @@ services:
         condition: service_healthy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.aggregator.priority=0
-      - traefik.http.routers.aggregator.rule=Host(`localhost`) && PathPrefix(`/api/services`)
+      - traefik.http.routers.aggregator.priority=100
+      - traefik.http.routers.aggregator.rule=PathPrefix(`/api/services`)
+
+  ui:
+    container_name: osi-ui
+    build:
+      context: ./OSItemIndex.UI
+      dockerfile: Dockerfile.dev
+    environment:
+      CHOKIDAR_USEPOLLING: 'true'
+    ports:
+      - '23403:3000'
+    depends_on:
+      api:
+        condition: service_started
+    volumes:
+      - './OSItemIndex.UI/src/:/app'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ui.priority=80
+      - traefik.http.routers.ui.rule=Host(`localhost`)

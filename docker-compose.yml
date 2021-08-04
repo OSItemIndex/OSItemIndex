@@ -84,8 +84,8 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.api.tls=true
-      - traefik.http.routers.api.priority=1
-      - traefik.http.routers.api.rule=Host(`${WEB_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/swagger`))
+      - traefik.http.routers.api.priority=90
+      - traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/swagger`)
 
   aggregator:
       container_name: osi-aggregator
@@ -113,5 +113,20 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.aggregator.tls=true
-        - traefik.http.routers.aggregator.priority=0
-        - traefik.http.routers.aggregator.rule=Host(`${WEB_DOMAIN}`) && PathPrefix(`/api/services`)
+        - traefik.http.routers.aggregator.priority=100
+        - traefik.http.routers.aggregator.rule=PathPrefix(`/api/services`)
+
+    ui:
+      container_name: osi-ui
+      build:
+        context: ./OSItemIndex.UI
+        dockerfile: Dockerfile
+      ports:
+        - "23403:3000"
+      depends_on:
+        api:
+          condition: service_started
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.ui.priority=80
+        - traefik.http.routers.ui.rule=Host(`${WEB_DOMAIN}`)
