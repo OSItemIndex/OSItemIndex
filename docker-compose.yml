@@ -87,9 +87,9 @@ services:
       - traefik.http.routers.api.priority=90
       - traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/swagger`)
 
-  aggregator:
-      container_name: osi-aggregator
-      image: ghcr.io/ositemindex/ositemindex.aggregator:latest
+  updater:
+      container_name: osi-updater
+      image: ghcr.io/ositemindex/ositemindex.updater:latest
       env_file: .env
       environment:
         DbOptions__DbHost: postgres
@@ -112,9 +112,9 @@ services:
           condition: service_healthy
       labels:
         - traefik.enable=true
-        - traefik.http.routers.aggregator.tls=true
-        - traefik.http.routers.aggregator.priority=100
-        - traefik.http.routers.aggregator.rule=PathPrefix(`/api/services`)
+        - traefik.http.routers.updater.tls=true
+        - traefik.http.routers.updater.priority=100
+        - traefik.http.routers.updater.rule=PathPrefix(`/api/services`)
 
     ui:
       container_name: osi-ui

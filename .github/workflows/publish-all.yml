@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - repo: ositemindex.api
-          - repo: ositemindex.aggregator
+          - repo: ositemindex.updater
     steps:
       - name: Dispatch build-publish [${{ matrix.repo }}]
         uses: felixp8/dispatch-and-wait@v0.1.0

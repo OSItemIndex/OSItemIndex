@@ -82,10 +82,10 @@ services:
       - traefik.http.routers.api.priority=90
       - traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/swagger`)
 
-  aggregator:
-    container_name: osi-aggregator
+  updater:
+    container_name: osi-updater
     build:
-      context: ./OSItemIndex.Aggregator
+      context: ./OSItemIndex.Updater
       dockerfile: Dockerfile.dev
     env_file: .env
     environment:
@@ -98,7 +98,7 @@ services:
     ports:
       - '23402:5000'
     volumes:
-      - './OSItemIndex.Aggregator/src/:/app'
+      - './OSItemIndex.Updater/src/:/app'
     deploy:
       resources:
         limits:
@@ -112,8 +112,8 @@ services:
         condition: service_healthy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.aggregator.priority=100
-      - traefik.http.routers.aggregator.rule=PathPrefix(`/api/services`)
+      - traefik.http.routers.updater.priority=100
+      - traefik.http.routers.updater.rule=PathPrefix(`/api/services`)
 
   ui:
     container_name: osi-ui

@@ -1,21 +1,21 @@
-name: Publish docker package [aggregator]
+name: Publish docker package [updater]
 
 # Controls when the workflow will run
 on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   repository_dispatch:
-    types: [publish-aggregator]
+    types: [publish-updater]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest # The type of runner that the job will run on
 
     steps:
-      - name: Dispatch build-publish [ositemindex.aggregator]
+      - name: Dispatch build-publish [ositemindex.updater]
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
           owner: ositemindex
-          repo: ositemindex.aggregator
+          repo: ositemindex.updater
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           event_type: build-publish
           wait_time: 10
