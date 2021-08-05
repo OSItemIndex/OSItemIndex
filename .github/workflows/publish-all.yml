@@ -16,9 +16,11 @@ jobs:
           - repo: ositemindex.aggregator
     steps:
       - name: Dispatch build-publish [${{ matrix.repo }}]
-        uses: convictional/trigger-workflow-and-wait@v1.5.0
+        uses: felixp8/dispatch-and-wait@v0.1.0
         with:
           owner: ositemindex
           repo: ${{ matrix.repo }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow_file_name: build-publish-dockerfile.yml
+          token: ${{ secrets.PAT }}
+          event_type: build-publish
+          wait_time: 10
+          max_time: 180
