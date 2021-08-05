@@ -4,41 +4,19 @@ name: Publish docker package [aggregator]
 on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   repository_dispatch:
-    types: [deploy]
+    types: [publish-aggregator]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest # The type of runner that the job will run on
-    
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Dispatch build-publish [ositemindex.aggregator]
+        uses: felixp8/dispatch-and-wait@v0.1.0
         with:
-          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-
-      - name: Set version
-        uses: dotnet/nbgv@v0.4
-        id: nbgv
-        with:
-          setAllVars: false
-          
-      - name: Checkout ositemindex.aggregator
-        uses: actions/checkout@v2
-        with:
-          repository: ositemindex/ositemindex.aggregator
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.PACKAGES_PAT }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          push: true # Will only build if this is not here
-          context: .
-          tags: | 
-            ghcr.io/ositemindex/ositemindex.aggregator:latest
-            ghcr.io/ositemindex/ositemindex.aggregator:${{ steps.nbgv.outputs.SimpleVersion }}
+          owner: ositemindex
+          repo: ositemindex.aggregator
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event_type: build-publish
+          wait_time: 10
+          max_time: 180

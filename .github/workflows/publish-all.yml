@@ -1,21 +1,25 @@
-name: Publish docker package [api]
+name: Publish docker packages
 
 # Controls when the workflow will run
 on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   repository_dispatch:
-    types: [publish-api]
+    types: [publish-all]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest # The type of runner that the job will run on
-
+    strategy:
+      matrix:
+        include:
+          - repo: ositemindex.api
+          - repo: ositemindex.aggregator
     steps:
-      - name: Dispatch build-publish [ositemindex.api]
+      - name: Dispatch build-publish [${{ matrix.repo }}]
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
           owner: ositemindex
-          repo: ositemindex.api
+          repo: ${{ matrix.repo }}
           token: ${{ secrets.GITHUB_TOKEN }}
           event_type: build-publish
           wait_time: 10
