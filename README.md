@@ -20,10 +20,10 @@ OSItemIndex is designed as microservices and implemented as a docker-compose pro
 
 # Development
 
-`docker-compose.dev.yml` is implemented as a quick development environment to work in. It'll build all services (if needed) and attach the source directory as a volume. Each service utilizes `dotnet watch` or `react serve` so that any source file changes will trigger a re-compile. Any source file changes made can be immediately seen, on any service.
+[`docker-compose.dev.yml`](docker-compose.dev.yml) is implemented as a quick development environment to work in. It'll build all service images (if needed) and attach the source directory as a volume. Each service utilizes `dotnet watch` or `react serve` so that any source file changes will trigger a re-compile. Any source file changes made can be immediately seen, on any service.
 
 * `localhost` is used as the domain
-* `.env` is used, but note `REALTIME_JWT` and `WEB_DOMAIN` aren't used in `docker-compose.dev.yml`
+* [`.env`](.env) is used, but note `REALTIME_JWT` and `WEB_DOMAIN` aren't used in `docker-compose.dev.yml`
 
 # Devops
 
