@@ -16,7 +16,7 @@ jobs:
         with:
           owner: ositemindex
           repo: ositemindex.api
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           event_type: build-publish
           wait_time: 10
           max_time: 180
