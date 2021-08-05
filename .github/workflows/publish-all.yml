@@ -20,5 +20,5 @@ jobs:
         with:
           owner: ositemindex
           repo: ${{ matrix.repo }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow_file_name: build-publish-dockerfile.yml
