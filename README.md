@@ -46,10 +46,10 @@ docker pull ghcr.io/ositemindex/ui:latest
 
 - [`.env`](.env) is used by default
 - `localhost` is used as the dev domain
-  - localhost is used by [OSItemIndex.UI](https://github.com/OSItemIndex/OSItemIndex.UI)
-  - localhost/api/services is used by [OSItemIndex.Updater](https://github.com/OSItemIndex/OSItemIndex.Updater)
-  - localhost/swashbuckle and localhost/api is used by [OSItemIndex.API](https://github.com/OSItemIndex/OSItemIndex.API)
-  - localhost:POSTGRES_PORT (defined in [`.env` 5432 by default](.env)) can be used to connect to the postgres db
+  - `localhost` is used by [OSItemIndex.UI](https://github.com/OSItemIndex/OSItemIndex.UI)
+  - `localhost/api` and `localhost/swagger` is used by [OSItemIndex.API](https://github.com/OSItemIndex/OSItemIndex.API)
+  - `localhost/api/services` is used by [OSItemIndex.Updater](https://github.com/OSItemIndex/OSItemIndex.Updater)
+  - `localhost:POSTGRES_PORT` (defined in [`.env` 5432 by default](.env)) can be used to connect to the postgres db
     - Default credentials found in [`.env`](.env)
 
 * Local development does **not** use `https`
