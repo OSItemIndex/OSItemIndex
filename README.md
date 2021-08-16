@@ -54,7 +54,7 @@ docker pull ghcr.io/ositemindex/ui:latest
 
 * Local development does **not** use `https`
 
-# Devops
+# CI/CD
 
 OSItemIndex utilizes GitHub actions to build and deploy docker images to the OSItemIndex organization
 
@@ -62,4 +62,3 @@ OSItemIndex utilizes GitHub actions to build and deploy docker images to the OSI
 - The main OSItemIndex repository contains [individual publish[service] workflows](.github/workflows) and [a publish[all] workflow](.github/workflows/publish-all.yml) that dispatches a build-and-publish event to each service repository by utilizing strategy matrix's, and waits for each workflow to finish
 - The OSItemIndex repository serves as a central deployment tool through GitHub actions
 - [GitHubs `REST` API allows creating `repository_dispatch` events](https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event), so theoritically deployment can be controlled with `http requests` externally with a `personal access token`
-
